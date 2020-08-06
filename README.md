@@ -26,14 +26,16 @@ conda create --name breed --file dog_breed/environment/pkg.txt
     * update README
     * create `tree.txt` file
     * create `pkg.txt` file
-    * implement human detector
-	* implement dog detector
 	* Create CNN(s) to classify dog's breed (using transfer learning)
 	* Create script to train network
 	* Create a script for prediction with arguments
 		* -n trained network
 		* -i input image
 	* Create preprocessing module (resize of input image)
+##### @Done:
+    * implement human detector
+	* implement dog detector
+
 	
 
 ## folder structure
@@ -50,6 +52,15 @@ conda create --name breed --file dog_breed/environment/pkg.txt
 +---data
 |   |   __init__.py
 |           
++---detectors
+|   |  detectors.py
+|   |   S_dog_detector.py
+|   |   S_human_detector.py
+|   |   __init__.py
+|   |
+|   +---saved_detectors
+|   |    |    haarcascade_frontalface_alt.xml
+|
 +---environment
 |       pkg.txt
 |       tree.txt
@@ -57,10 +68,6 @@ conda create --name breed --file dog_breed/environment/pkg.txt
 +---saved_models
 |
 +---models
-|       (model.pkl)
-|       metrics.py
-|       train_classifier.py
-|       train_classifier_script.py
 |       __init__.py
 |       
 ```
@@ -81,6 +88,15 @@ python ...
 ```
 
 ### components
+In general, files whose name starts with `S_` are executable files.
 #### common
 * *paths.py*:
 the module defines the default paths of the project
+
+#### detectors
+* *detectors.py*:
+implements the human and dog detector for images
+* *S_human_detector.py*:
+will print if the image represents or not a human (useful to test human detector)
+* *S_dog_detector.py*:
+will print if the image represents or not a dog (useful to test dog detector)
