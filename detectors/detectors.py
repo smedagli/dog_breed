@@ -8,8 +8,9 @@ import cv2
 import numpy as np
 
 from keras.applications.resnet50 import ResNet50
-from keras.applications.resnet50 import preprocess_input, decode_predictions
-from keras.preprocessing import image
+from keras.applications.resnet50 import preprocess_input
+
+from dog_breed.preprocessing import preprocess
 
 ResNet50_model = ResNet50(weights='imagenet')
 
@@ -44,15 +45,6 @@ def is_human(image_path: str) -> bool:
     return len(detect_human(image_path)) > 0
 
 
-def path_to_tensor(img_path):
-    # loads RGB image as PIL.Image.Image type
-    img = image.load_img(img_path, target_size=(224, 224))
-    # convert PIL.Image.Image type to 3D tensor with shape (224, 224, 3)
-    x = image.img_to_array(img)
-    # convert 3D tensor to 4D tensor with shape (1, 224, 224, 3) and return 4D tensor
-    return np.expand_dims(x, axis=0)
-
-
 def is_dog(image_path: str) -> bool:
     """
     Args:
@@ -64,6 +56,6 @@ def is_dog(image_path: str) -> bool:
         >>> is_dog('samples/sample_dog.jpg')
         True
     """
-    img = preprocess_input(path_to_tensor(image_path))
+    img = preprocess_input(preprocess.path_to_tensor(image_path))
     pred = np.argmax(ResNet50_model.predict(img))
     return np.logical_and(pred <= 268, pred >= 151)
