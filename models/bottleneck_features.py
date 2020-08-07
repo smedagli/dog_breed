@@ -13,6 +13,7 @@ from keras.applications.resnet50 import ResNet50, preprocess_input
 from keras.applications.xception import Xception, preprocess_input
 from keras.applications.inception_v3 import InceptionV3, preprocess_input
 
+from dog_breed.common import tools
 
 args_NN = {'weights': 'imagenet',
            'include_top': False,
@@ -49,5 +50,4 @@ def extract_bottleneck_features_list(network: str, tensor_list: list) -> np.ndar
         net = InceptionV3(**args_NN)
     elif network == 'Xception':
         net = Xception(**args_NN)
-    return np.vstack(list(map(lambda x: net.predict(preprocess_input(x)), tensor_list)))
-
+    return np.vstack(list(map(lambda x: net.predict(preprocess_input(x)), tools.progr(tensor_list))))
