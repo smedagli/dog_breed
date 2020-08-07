@@ -1,9 +1,13 @@
-import request
+import requests
 import io
 import os
 import numpy as np
 
 from keras.callbacks import ModelCheckpoint
+
+from dog_breed.models.bottleneck_features import extract_bottleneck_features
+from dog_breed.data.datasets import get_dog_names
+
 
 def load_bottleneck_features(network: str) -> dict:
     """ Loads the precomputed bottleneck features for a series of architectures
@@ -29,39 +33,33 @@ def load_network_weights(network, weight_file: str):
     network.load_weights(weight_file)
 
 
-def train_network(network,bottleneck_network, training_data, training_target,
-                  validation_data, validation_target, overwrite=0):
+def train_network(network, bottleneck_network, training_data, training_target,
+                  validation_data, validation_target, overwrite=0, prefix='mynet'):
+
     """ Trains the given network and saves the best weights
     Trains the network using the bottleneck features
     Args:
         network:
+        bottleneck_network:
+        training_data:
+        training_target:
+        validation_data:
+        validation_target:
         overwrite: if 1, overwrites the saved weights
+        prefix: prefix of the filename to save weights
     Returns:
     """
-    model_weight_file = f'saved_models/weight.best.{bottleneck_network}.hdf5'
-    if os.path.exists(model_weight_file):
+    model_weight_file = f'saved_models/{prefix}_weight.best.{bottleneck_network}.hdf5'
+    if os.path.exists(model_weight_file) and not overwrite:
         print("Loading existing weights")
     else:
         checkpointer = ModelCheckpoint(filepath=model_weight_file,
                                        verbose=1, save_best_only=True)
 
         network.fit(training_data, training_target,
-                validation_data=(validation_data, validation_target),
-                epochs=10, batch_size=20, callbacks=[checkpointer], verbose=1)
+                    validation_data=(validation_data, validation_target),
+                    epochs=10, batch_size=20, callbacks=[checkpointer], verbose=1)
     load_network_weights(network, model_weight_file)
-
-
-def compute_bottleneck_features(image_path: str):
-    """
-    TODO:
-        implementation
-    Args:
-        image_path:
-
-    Returns:
-
-    """
-    raise NotImplementedError
 
 
 def predict(network, image_path: str):
@@ -73,8 +71,7 @@ def predict(network, image_path: str):
         image_path:
     Returns:
     """
-    bottleneck_features = compute_bottleneck_features(network, image_path)
+    dog_names = get_dog_names()
+    bottleneck_features = extract_bottleneck_features(network, image_path)
     pred = network.predict(bottleneck_features)
     return dog_names[np.argmax(pred)]
-
-
