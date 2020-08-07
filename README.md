@@ -68,6 +68,9 @@ conda create --name breed --file dog_breed/environment/pkg.txt
 +---saved_models
 |
 +---models
+|       bottleneck_features.py
+|       build_network.py
+|       predict.py
 |       __init__.py
 |       
 ```
@@ -93,6 +96,10 @@ In general, files whose name starts with `S_` are executable files.
 * *paths.py*:
 the module defines the default paths of the project
 
+#### data
+* *datasets.py*:
+
+
 #### detectors
 * *detectors.py*:
 implements the human and dog detector for images
@@ -100,3 +107,10 @@ implements the human and dog detector for images
 will print if the image represents or not a human (useful to test human detector)
 * *S_dog_detector.py*:
 will print if the image represents or not a dog (useful to test dog detector)
+
+#### models
+* *bottleneck_features.py*:
+contains functions to compute the bottleneck features for state-of-the-art networks
+* *build_network.py*:
+contains the function(s) to create a NN to implement transfer learning.
+* *predict.py*:
