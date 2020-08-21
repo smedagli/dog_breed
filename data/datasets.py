@@ -15,6 +15,7 @@ def load_dataset(path: str):
         path:
     Returns:
     """
+    print(f'Loading from file: {path}')
     data = load_files(path)
     dog_files = np.array(data['filenames'])
     dog_targets = np_utils.to_categorical(np.array(data['target']), 133)
