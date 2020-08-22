@@ -27,6 +27,21 @@ def extract_InceptionV3(tensor): return InceptionV3(**args_NN).predict(preproces
 
 
 def extract_bottleneck_features(network: str, tensor) -> np.ndarray:
+    """ Computes the bottleneck features of a tensors with the given network.
+    This function is useful for transfer learning purposes.
+    Args:
+        network: state-of-the-art network. Can be
+            * VGG16
+            * VGG19
+            * Resnet50
+            * InceptionV3
+            * Xception
+        tensor:
+    Returns:
+        the features computes with the selected state-of-the-art network before its output layer
+    See Also:
+        extract_bottleneck_features_list()
+    """
     if network == 'VGG19':
         return extract_VGG19(tensor)
     elif network == 'VGG16':
@@ -40,6 +55,23 @@ def extract_bottleneck_features(network: str, tensor) -> np.ndarray:
 
 
 def extract_bottleneck_features_list(network: str, tensor_list: list) -> np.ndarray:
+    """ Computes the bottleneck features of a list of tensors with the given network.
+    Useful for transfer learning.
+    Since this function loads the pre-built state-of-the-art network just once, is much better to use this function
+    instead of mapping extract_bottleneck_features to a list of tensors.
+    Args:
+        network: state-of-the-art network. Can be
+            * VGG16
+            * VGG19
+            * Resnet50
+            * InceptionV3
+            * Xception
+        tensor_list:
+    Returns:
+
+    See Also:
+        extract_bottleneck_features()
+    """
     if network == 'VGG19':
         net = VGG19(**args_NN)
     elif network == 'VGG16':
