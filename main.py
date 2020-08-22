@@ -24,11 +24,13 @@ soa_network = 'Resnet50'
 train_files, y_train = datasets.load_training()
 valid_files, y_valid = datasets.load_validation()
 test_files, y_test = datasets.load_test()
+# compute the tensors
 
 tensors_train = list(map(lambda x: preprocess.path_to_tensor(x), ct.progr(train_files)))
 tensors_valid = list(map(lambda x: preprocess.path_to_tensor(x), ct.progr(valid_files)))
 tensors_test = list(map(lambda x: preprocess.path_to_tensor(x), ct.progr(test_files)))
 
+# compute bottleneck features
 
 bottleneck_train = bf.extract_bottleneck_features_list(soa_network, tensors_train)
 bottleneck_test = bf.extract_bottleneck_features_list(soa_network, tensors_test)
