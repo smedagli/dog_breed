@@ -2,6 +2,7 @@ import requests
 import io
 import os
 import numpy as np
+import pickle
 
 from keras.callbacks import ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
