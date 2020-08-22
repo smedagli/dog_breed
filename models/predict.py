@@ -62,8 +62,13 @@ def train_network(network, bottleneck_network, training_data, training_target,
         data_augmentation: if 1 uses data augmentation for training data
     Returns:
     """
-    model_weight_file = f'saved_models/{prefix}_weight.best.{bottleneck_network}.hdf5' \
-        if data_augmentation == True else f'saved_models/{prefix}_A_weight.best.{bottleneck_network}.hdf5'
+    epochs = args_model_training['epochs']
+    model_weight_file = f'saved_models/{prefix}_{epochs}_weight.best.{bottleneck_network}.hdf5'
+    model_hist_file = f'saved_models/{prefix}_{epochs}_hist.{bottleneck_network}.hdf5'
+    if data_augmentation:
+        model_weight_file = model_weight_file.replace('_weight', '_A_weight')
+        model_hist_file = model_hist_file.replace('_hist', '_A_hist')
+
     if os.path.exists(model_weight_file) and not overwrite:
         print("Loading existing weights")
     else:
@@ -76,6 +81,7 @@ def train_network(network, bottleneck_network, training_data, training_target,
                                callbacks=[checkpointer],
                                **args_model_training, batch_size=BATCH_SIZE,
                                )
+            pickle.dump([hist], open(model_hist_file, 'wb'))
         else:
             # model_weight_file = f'saved_models/{prefix}_A_weight.best.{bottleneck_network}.hdf5'
             datagen = ImageDataGenerator(**args_data_augmentation)
@@ -86,7 +92,10 @@ def train_network(network, bottleneck_network, training_data, training_target,
                                          callbacks=[checkpointer],
                                          **args_model_training,
                                          )
+            pickle.dump([hist], open(model_hist_file, 'wb'))
+
     load_network_weights(network, model_weight_file)
+    hist = pickle.load(open(model_hist_file, 'rb'))
     return hist
 
 
