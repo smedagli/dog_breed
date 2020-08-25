@@ -1,0 +1,73 @@
+Folder PATH listing for volume OS
+Volume serial number is 68BD-CBEB
+C:.
+|   .gitignore
+|   dog_app.html
+|   main.py
+|   README.md
+|   __init__.py
+|   
++---.idea
+|   |   .gitignore
+|   |   dog_breed.iml
+|   |   misc.xml
+|   |   modules.xml
+|   |   vcs.xml
+|   |   workspace.xml
+|   |   
+|   \---inspectionProfiles
+|           profiles_settings.xml
+|           
++---common
+|   |   graph.py
+|   |   metrics.py
+|   |   paths.py
+|   |   tools.py
+|   |   __init__.py
+|   |   
++---data
+|   |   analysis.py
+|   |   datasets.py
+|   |   __init__.py
+|   |   
+|   +---bottleneck_features
+|   |       
+|   +---dogImages
+|   |               
+|   +---lfw
+|   |   |   
+|           
++---detectors
+|   |   detectors.py
+|   |   S_dog_detector.py
+|   |   S_human_detector.py
+|   |   __init__.py
+|   |   
+|   \---saved_detectors
+|           haarcascade_frontalface_alt.xml
+|           
++---environment
+|       pkg.txt
+|       tree.txt
+|       
++---models
+|   |   bottleneck_features.py
+|   |   build_network.py
+|   |   predict.py
+|   |   __init__.py
+|   |   
+|           
++---notebooks
+|   |   data_analysis.ipynb
+|   |   
++---preprocessing
+|   |   preprocess.py
+|   |   __init__.py
+|   |
+|
++---samples
+|       sample_dog.jpg
+|       sample_human_2.png
+|       
++---saved_models
+|
