@@ -7,11 +7,11 @@ This module contains the functions to extract the bottleneck features from state
     * Xception
 """
 import numpy as np
-from keras.applications.vgg16 import VGG16, preprocess_input
-from keras.applications.vgg19 import VGG19, preprocess_input
-from keras.applications.resnet50 import ResNet50, preprocess_input
-from keras.applications.xception import Xception, preprocess_input
-from keras.applications.inception_v3 import InceptionV3, preprocess_input
+from keras.applications.vgg16 import VGG16
+from keras.applications.vgg19 import VGG19
+from keras.applications.resnet50 import ResNet50
+from keras.applications.xception import Xception
+from keras.applications.inception_v3 import InceptionV3
 
 from dog_breed.common import tools
 
@@ -19,11 +19,25 @@ args_NN = {'weights': 'imagenet',
            'include_top': False,
            }
 
-def extract_VGG16(tensor): return VGG16(**args_NN).predict(preprocess_input(tensor))
-def extract_VGG19(tensor): return VGG19(**args_NN).predict(preprocess_input(tensor))
-def extract_Resnet50(tensor): return ResNet50(**args_NN).predict(preprocess_input(tensor))
-def extract_Xception(tensor): return Xception(**args_NN).predict(preprocess_input(tensor))
-def extract_InceptionV3(tensor): return InceptionV3(**args_NN).predict(preprocess_input(tensor))
+def extract_VGG16(tensor):
+    from keras.applications.vgg16 import preprocess_input
+    return VGG16(**args_NN).predict(preprocess_input(tensor))
+
+def extract_VGG19(tensor):
+    from keras.applications.vgg19 import preprocess_input
+    return VGG19(**args_NN).predict(preprocess_input(tensor))
+
+def extract_Resnet50(tensor):
+    from keras.applications.resnet50 import preprocess_input
+    return ResNet50(**args_NN).predict(preprocess_input(tensor))
+
+def extract_Xception(tensor):
+    from keras.applications.xception import preprocess_input
+    return Xception(**args_NN).predict(preprocess_input(tensor))
+
+def extract_InceptionV3(tensor):
+    from keras.applications.inception_v3 import preprocess_input
+    return InceptionV3(**args_NN).predict(preprocess_input(tensor))
 
 
 def extract_bottleneck_features(network: str, tensor) -> np.ndarray:
@@ -73,13 +87,18 @@ def extract_bottleneck_features_list(network: str, tensor_list: list) -> np.ndar
         extract_bottleneck_features()
     """
     if network == 'VGG19':
+        from keras.applications.vgg19 import preprocess_input
         net = VGG19(**args_NN)
     elif network == 'VGG16':
+        from keras.applications.vgg16 import preprocess_input
         net = VGG16(**args_NN)
     elif network == 'Resnet50':
+        from keras.applications.resnet50 import preprocess_input
         net = ResNet50(**args_NN)
     elif network == 'InceptionV3':
+        from keras.applications.inception_v3 import preprocess_input
         net = InceptionV3(**args_NN)
     elif network == 'Xception':
+        from keras.applications.xception import preprocess_input
         net = Xception(**args_NN)
     return np.vstack(list(map(lambda x: net.predict(preprocess_input(x)), tools.progr(tensor_list))))
