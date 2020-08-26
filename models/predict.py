@@ -8,6 +8,7 @@ from keras.callbacks import ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 
 from dog_breed.models.bottleneck_features import extract_bottleneck_features
+from dog_breed.common import paths
 from dog_breed.data.datasets import get_dog_names
 
 args_data_augmentation = {'width_shift_range': 0.3,
@@ -16,11 +17,6 @@ args_data_augmentation = {'width_shift_range': 0.3,
                           'rescale': True,
                           'rotation_range': 0.5,
                           }
-
-args_model_training = {'epochs': 20,
-                       'verbose': 1,
-                       }
-BATCH_SIZE = 20
 
 
 def load_bottleneck_features(network: str) -> dict:
@@ -70,11 +66,8 @@ def train_network(network, bottleneck_network, training_data, training_target,
                            'verbose': 1,
                            }
 
-    model_weight_file = f'saved_models/{prefix}_{epochs}_weight.best.{bottleneck_network}.hdf5'
-    model_hist_file = f'saved_models/{prefix}_{epochs}_hist.{bottleneck_network}.hdf5'
-    if data_augmentation:
-        model_weight_file = model_weight_file.replace('_weight', '_A_weight')
-        model_hist_file = model_hist_file.replace('_hist', '_A_hist')
+    model_weight_file = paths.get_weights_filename(bottleneck_network, prefix, epochs, data_augmentation)
+    model_hist_file = paths.get_hist_filename(bottleneck_network, prefix, epochs, data_augmentation)
 
     if os.path.exists(model_weight_file) and not overwrite:
         print("Loading existing weights")
