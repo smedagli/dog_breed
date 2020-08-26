@@ -47,7 +47,7 @@ def load_network_weights(network, weight_file: str):
 
 def train_network(network, bottleneck_network, training_data, training_target,
                   validation_data, validation_target, overwrite=0, prefix='mynet',
-                  data_augmentation=True):
+                  data_augmentation=True, epochs=15, batch_size=20):
 
     """ Trains the given network and saves the best weights
     Trains the network using the bottleneck features
@@ -61,9 +61,15 @@ def train_network(network, bottleneck_network, training_data, training_target,
         overwrite: if 1, overwrites the saved weights
         prefix: prefix of the filename to save weights
         data_augmentation: if 1 uses data augmentation for training data
+        epochs: number of epochs to train the model
+        batch_size: batch size to train the model
     Returns:
     """
-    epochs = args_model_training['epochs']
+
+    args_model_training = {'epochs': epochs,
+                           'verbose': 1,
+                           }
+
     model_weight_file = f'saved_models/{prefix}_{epochs}_weight.best.{bottleneck_network}.hdf5'
     model_hist_file = f'saved_models/{prefix}_{epochs}_hist.{bottleneck_network}.hdf5'
     if data_augmentation:
@@ -80,15 +86,15 @@ def train_network(network, bottleneck_network, training_data, training_target,
             hist = network.fit(training_data, training_target,
                                validation_data=(validation_data, validation_target),
                                callbacks=[checkpointer],
-                               **args_model_training, batch_size=BATCH_SIZE,
+                               **args_model_training, batch_size=batch_size,
                                )
             pickle.dump([hist], open(model_hist_file, 'wb'))
         else:
             # model_weight_file = f'saved_models/{prefix}_A_weight.best.{bottleneck_network}.hdf5'
             datagen = ImageDataGenerator(**args_data_augmentation)
             datagen.fit(training_data)
-            hist = network.fit_generator(datagen.flow(training_data, training_target, batch_size=BATCH_SIZE),
-                                         steps_per_epoch=training_data.shape[0] / BATCH_SIZE,
+            hist = network.fit_generator(datagen.flow(training_data, training_target, batch_size=batch_size),
+                                         steps_per_epoch=training_data.shape[0] / batch_size,
                                          validation_data=(validation_data, validation_target),
                                          callbacks=[checkpointer],
                                          **args_model_training,
