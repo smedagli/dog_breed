@@ -13,7 +13,6 @@ def path_to_tensor(img_path):
     img = image.load_img(img_path, target_size=(224, 224))
     # convert PIL.Image.Image type to 3D tensor with shape (224, 224, 3)
     x = image.img_to_array(img)
-    x = x.astype('float32') / 255
     # convert 3D tensor to 4D tensor with shape (1, 224, 224, 3) and return 4D tensor
     return np.expand_dims(x, axis=0)
 
