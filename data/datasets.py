@@ -10,10 +10,12 @@ folders = paths.Folders()
 
 
 def load_dataset(path: str):
-    """
+    """ Loads file names and their labels (as categorical)
     Args:
         path:
     Returns:
+        dog_files: list of filenames of dog images
+        dog_targets: categorical (one hot encoded) labels for each file in the dog_files list
     """
     print(f'Loading from file: {path}')
     data = load_files(path)
