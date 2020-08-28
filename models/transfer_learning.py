@@ -33,7 +33,7 @@ from dog_breed.common import paths
 from dog_breed.common import metrics
 from dog_breed.models import bottleneck_features as bf
 from dog_breed.models import build_network as bn
-from dog_breed.models import trainAndPredict
+from dog_breed.models import train_and_predict
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -88,11 +88,11 @@ def train_transfer_learning_net(pretrained_network: str, epochs: int, data_augme
         #                                   validation_data=bottleneck_valid, validation_target=y_valid,
         #                                   **args_train,
         #                                   )
-        trainAndPredict.train_network(network=model,
-                                      training_data=bottleneck_train, training_target=y_train,
-                                      validation_data=bottleneck_valid, validation_target=y_valid,
-                                      **args_train,
-                                      )
+        train_and_predict.train_network(network=model,
+                                        training_data=bottleneck_train, training_target=y_train,
+                                        validation_data=bottleneck_valid, validation_target=y_valid,
+                                        **args_train,
+                                        )
 
         model_file = paths.get_weights_filename(pretrained_network, prefix, epochs, data_augmentation)
         print(f"Weights saved at\t{model_file}")
@@ -139,7 +139,7 @@ def eval_performance(pretrained_network: str, epochs: int, data_augmentation: bo
             bottleneck_features = bf.extract_bottleneck_features_list(pretrained_network, tensors)
 
         model = bn.build_transfer_learning_netwok(input_shape=bottleneck_features[0].shape, n_of_classes=133)
-        trainAndPredict.load_network_weights(model, model_file)
+        train_and_predict.load_network_weights(model, model_file)
         pred = model.predict(bottleneck_features)
         acc = metrics.get_accuracy(np.array([np.argmax(x) for x in pred]),
                                    np.array([np.argmax(y) for y in labels]))
