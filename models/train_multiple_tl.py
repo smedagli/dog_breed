@@ -38,9 +38,6 @@ if __name__ == '__main__':
     test_files, y_test = datasets.load_test()
     n_classes = len(datasets.get_dog_names())
     # compute the tensors
-    # tensors_train = preprocess.paths_to_tensor(train_files).astype('float32') / 255
-    # tensors_valid = preprocess.paths_to_tensor(valid_files).astype('float32') / 255
-    # tensors_test = preprocess.paths_to_tensor(test_files).astype('float32') / 255
     tensors_train = list(map(lambda x: preprocess.path_to_tensor(x).astype('float32') / 255, ct.progr(train_files)))
     tensors_valid = list(map(lambda x: preprocess.path_to_tensor(x).astype('float32') / 255, ct.progr(valid_files)))
     tensors_test = list(map(lambda x: preprocess.path_to_tensor(x).astype('float32') / 255, ct.progr(test_files)))
@@ -63,18 +60,19 @@ if __name__ == '__main__':
             model = bn.build_transfer_learning_netwok(input_shape=bottleneck_train[0].shape, n_of_classes=n_classes)
             model.summary()
 
-            # hist = trainAndPredict.train_network(network=model, bottleneck_network=soa_network,
+            # hist = trainAndPredict.train_network_tl(network=model, bottleneck_network=soa_network,
             #                                      training_data=bottleneck_train, training_target=y_train,
             #                                      validation_data=bottleneck_valid, validation_target=y_valid,
             #                                      overwrite=0, prefix='tl',
             #                                      data_augmentation=data_augmentation,
             #                                      epochs=epochs,
             #                                      )
-            train_and_predict.train_network(network=model, bottleneck_network=soa_network,
-                                            training_data=bottleneck_train, training_target=y_train,
-                                            validation_data=bottleneck_valid, validation_target=y_valid,
-                                            overwrite=0, prefix='tl', data_augmentation=data_augmentation, epochs=epochs,
-                                            )
+            train_and_predict.train_network_tl(network=model, bottleneck_network=soa_network,
+                                               training_data=bottleneck_train, training_target=y_train,
+                                               validation_data=bottleneck_valid, validation_target=y_valid,
+                                               overwrite=0, prefix='tl', data_augmentation=data_augmentation,
+                                               epochs=epochs,
+                                               )
 
             pred_test_probl = model.predict(bottleneck_test)
             pred_test = np.array([np.argmax(x) for x in pred_test_probl])
