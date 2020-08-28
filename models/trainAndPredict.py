@@ -69,6 +69,7 @@ def train_network(network, bottleneck_network: str, training_data, training_targ
 
     if os.path.exists(model_weight_file) and not overwrite:
         print("Loading existing weights")
+        # hist = pickle.load(open(model_hist_file, 'rb'))
     else:
         checkpointer = ModelCheckpoint(filepath=model_weight_file,
                                        verbose=1, save_best_only=True)
@@ -91,10 +92,10 @@ def train_network(network, bottleneck_network: str, training_data, training_targ
                                          **args_model_training,
                                          )
             pickle.dump([hist], open(model_hist_file, 'wb'))
+        pickle.dump(hist.history, open(model_hist_file, 'wb'))
 
     load_network_weights(network, model_weight_file)
-    hist = pickle.load(open(model_hist_file, 'rb'))
-    return hist
+    # return hist
 
 
 def predict(network, image_path: str) -> str:
