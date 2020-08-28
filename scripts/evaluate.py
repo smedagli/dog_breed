@@ -14,10 +14,13 @@ from dog_breed.models import transfer_learning as tl
 def evaluate_models_in_folder(models_folder) -> pd.DataFrame:
     weight_file_list = list(filter(lambda x: paths.is_weight_file(x),
                                    paths.listdir(models_folder)))  # all weight files
-    base_net = list(
-        map(lambda x: x.rsplit('.', 2)[1], weight_file_list))  # name of the bottleneck network for each model
-    epochs = list(map(lambda x: x.rsplit('_')[3], weight_file_list))  # number of epochs for each model
-    basename = list(map(lambda x: os.path.basename(x).split('_')[0], weight_file_list))  # prefix for each model
+
+    base_net = list(map(lambda x: x.rsplit('.', 2)[1],
+                        weight_file_list))  # name of the bottleneck network for each model
+    epochs = list(map(lambda x: os.path.basename(x).rsplit('_')[1],
+                      weight_file_list))  # number of epochs for each model
+    basename = list(map(lambda x: os.path.basename(x).split('_')[0],
+                        weight_file_list))  # prefix for each model
     augmented = list(map(lambda x: '_A_weight' in x, weight_file_list))
 
     saved_models_df = pd.DataFrame(data=(base_net, basename, epochs, augmented, weight_file_list),
@@ -25,7 +28,7 @@ def evaluate_models_in_folder(models_folder) -> pd.DataFrame:
                                    ).T
 
     if saved_models_df.empty:
-        pass
+        return pd.DataFrame()
     else:
         for bottle_net, df_by_net in saved_models_df.groupby('bottleneck_features'):
             pretrained_network = bottle_net
@@ -45,7 +48,7 @@ def evaluate_models_in_folder(models_folder) -> pd.DataFrame:
 
 if __name__ == '__main__':
     defaults = {'models_folder': paths.Folders().models,
-                'report_folder': paths.Folders().data,
+                'report_folder': paths.Folders().models,
                 }
 
     parser = argparse.ArgumentParser(
@@ -61,6 +64,9 @@ if __name__ == '__main__':
     arguments = vars(args)
 
     df = evaluate_models_in_folder(arguments['models_folder'])
-    output_file = os.path.join(arguments['output'], 'report.csv')
+
+    folder = os.path.basename(os.path.abspath(arguments['models_folder']))
+    output_file = os.path.join(arguments['output'], f'{folder}_report.csv')
+
     print(f"\nWriting report at\t{output_file}")
     df.to_csv(output_file, index=False)
