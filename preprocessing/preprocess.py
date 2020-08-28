@@ -1,41 +1,45 @@
+"""
+This module contains tools for preprocessing of the images.
+Images need to be preprocessed to be transformed to a tensor in order to feed a keras CNN.
+"""
 import numpy as np
 import tqdm
 
 from keras.preprocessing import image
 
 
-img_size = 224  # images loaded must be resized to this dimension (squared)
+IMG_SIZE = 224  # images loaded must be resized to this dimension (squared)
 
 
-def _load_image_size(image_path: str, h=img_size, w=img_size):
+def _load_image_size(image_path: str, height=IMG_SIZE, width=IMG_SIZE):
     """ Loads an image imposing the input resolution w x h
     @ TODO:
         check the order of h and w
     Args:
         image_path: path to the image
-        h: height of the image to load
-        w: width of the image to load
+        height: height of the image to load
+        width: width of the image to load
     Returns:
     Examples:
         >>> _load_image_size('samples/sample_dog.jpg')
         <PIL.Image.Image image mode=RGB size=224x224 at 0x1FABF911B70>
     """
-    img = image.load_img(image_path, target_size=(w, h))
+    img = image.load_img(image_path, target_size=(width, height))
     return img
 
 
-def load_image(image_path: str, h=img_size, w=img_size):
+def load_image(image_path: str, height=IMG_SIZE, width=IMG_SIZE):
     """ Loads the image with a given resolution and normalizes the pixel values
     Args:
         image_path: path to the image
-        h: height of the image to load
-        w: width of the image to load
+        height: height of the image to load
+        width: width of the image to load
     Returns:
     Examples:
         >>> load_image('samples/sample_dog.jpg')[0, 0, 0]
         array([0.5372549 , 0.4745098 , 0.27450982], dtype=float32)
     """
-    img = _load_image_size(image_path, h, w)
+    img = _load_image_size(image_path, height, width)
     x = image.img_to_array(img)
     return np.vstack(x, axis=0)
 
@@ -47,7 +51,7 @@ def path_to_tensor(img_path: str) -> np.array:
     Returns:
     """
     # loads RGB image as PIL.Image.Image type
-    img = image.load_img(img_path, target_size=(img_size, img_size))
+    img = image.load_img(img_path, target_size=(IMG_SIZE, IMG_SIZE))
     # convert PIL.Image.Image type to 3D tensor with shape (224, 224, 3)
     x = image.img_to_array(img)
     # convert 3D tensor to 4D tensor with shape (1, 224, 224, 3) and return 4D tensor

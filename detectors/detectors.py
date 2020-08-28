@@ -4,11 +4,11 @@ Here are implemented functions
     * is_human(): returns True if a human face is in the image
 """
 
-import cv2
 import numpy as np
 
 from keras.applications.resnet50 import ResNet50
 from keras.applications.resnet50 import preprocess_input
+import cv2
 
 from dog_breed.preprocessing import preprocess
 

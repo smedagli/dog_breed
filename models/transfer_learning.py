@@ -69,8 +69,8 @@ def train_transfer_learning_net(pretrained_network: str, epochs: int, data_augme
         train_files, y_train = datasets.load_training()
         valid_files, y_valid = datasets.load_validation()
         # compute tensors
-        tensors_train = list(map(lambda x: preprocess.path_to_tensor(x), ct.progr(train_files)))
-        tensors_valid = list(map(lambda x: preprocess.path_to_tensor(x), ct.progr(valid_files)))
+        tensors_train = list(map(preprocess.path_to_tensor, ct.progr(train_files)))
+        tensors_valid = list(map(preprocess.path_to_tensor, ct.progr(valid_files)))
         # compute bottleneck features
 
         bottle_file = os.path.join(paths.Folders().bottleneck_features, f'bottleneck_{pretrained_network.lower()}.pkl')
@@ -83,11 +83,16 @@ def train_transfer_learning_net(pretrained_network: str, epochs: int, data_augme
         n_of_classes = len(datasets.get_dog_names())
         model = bn.build_transfer_learning_netwok(input_shape=bottleneck_train[0].shape, n_of_classes=n_of_classes)
 
-        _ = trainAndPredict.train_network(network=model,
-                                          training_data=bottleneck_train, training_target=y_train,
-                                          validation_data=bottleneck_valid, validation_target=y_valid,
-                                          **args_train,
-                                          )
+        # _ = trainAndPredict.train_network(network=model,
+        #                                   training_data=bottleneck_train, training_target=y_train,
+        #                                   validation_data=bottleneck_valid, validation_target=y_valid,
+        #                                   **args_train,
+        #                                   )
+        trainAndPredict.train_network(network=model,
+                                      training_data=bottleneck_train, training_target=y_train,
+                                      validation_data=bottleneck_valid, validation_target=y_valid,
+                                      **args_train,
+                                      )
 
         model_file = paths.get_weights_filename(pretrained_network, prefix, epochs, data_augmentation)
         print(f"Weights saved at\t{model_file}")
@@ -119,7 +124,7 @@ def eval_performance(pretrained_network: str, epochs: int, data_augmentation: bo
         else:
             files, labels = datasets.load_validation()
 
-        tensors = list(map(lambda x: preprocess.path_to_tensor(x), ct.progr(files)))
+        tensors = list(map(preprocess.path_to_tensor, ct.progr(files)))
 
         bottle_file = os.path.join(paths.Folders().bottleneck_features, f'bottleneck_{pretrained_network.lower()}.pkl')
         if os.path.exists(bottle_file):

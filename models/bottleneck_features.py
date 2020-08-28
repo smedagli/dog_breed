@@ -20,27 +20,27 @@ args_NN = {'weights': 'imagenet',
            }
 
 
-def extract_VGG16(tensor):
+def extract_VGG16(tensor) -> np.ndarray:
     from keras.applications.vgg16 import preprocess_input
     return VGG16(**args_NN).predict(preprocess_input(tensor))
 
 
-def extract_VGG19(tensor):
+def extract_VGG19(tensor) -> np.ndarray:
     from keras.applications.vgg19 import preprocess_input
     return VGG19(**args_NN).predict(preprocess_input(tensor))
 
 
-def extract_Resnet50(tensor):
+def extract_Resnet50(tensor) -> np.ndarray:
     from keras.applications.resnet50 import preprocess_input
     return ResNet50(**args_NN).predict(preprocess_input(tensor))
 
 
-def extract_Xception(tensor):
+def extract_Xception(tensor) -> np.ndarray:
     from keras.applications.xception import preprocess_input
     return Xception(**args_NN).predict(preprocess_input(tensor))
 
 
-def extract_InceptionV3(tensor):
+def extract_InceptionV3(tensor) -> np.ndarray:
     from keras.applications.inception_v3 import preprocess_input
     return InceptionV3(**args_NN).predict(preprocess_input(tensor))
 

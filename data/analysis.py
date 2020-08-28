@@ -1,12 +1,17 @@
-from dog_breed.data import datasets
-from dog_breed.common import paths
-from dog_breed.common import graph
-
+"""
+This module contains functions and methods to an initial data analysis.
+"""
 import pandas as pd
 import numpy as np
 from sklearn.datasets import load_files
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+from dog_breed.data import datasets
+from dog_breed.common import paths
+from dog_breed.common import graph
+
+
 plt.style.use('seaborn')
 
 DOG_NAMES = datasets.get_dog_names()

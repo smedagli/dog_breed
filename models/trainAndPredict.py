@@ -2,11 +2,11 @@
 @ TODO:
     - save history from train_network()
 """
-import requests
 import io
 import os
-import numpy as np
 import pickle
+import requests
+import numpy as np
 
 from keras.callbacks import ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator

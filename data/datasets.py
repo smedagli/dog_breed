@@ -1,5 +1,5 @@
-import numpy as np
 import os
+import numpy as np
 
 from sklearn.datasets import load_files
 from keras.utils import np_utils

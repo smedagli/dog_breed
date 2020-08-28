@@ -10,11 +10,12 @@ Procedure:
         * InceptionV3
         * Xception
 """
-from PIL import ImageFile
 import pickle
 import os
-import numpy as np
 from itertools import product
+import numpy as np
+from PIL import ImageFile
+
 
 from dog_breed.models import build_network as bn
 from dog_breed.data import datasets
@@ -62,13 +63,18 @@ if __name__ == '__main__':
             model = bn.build_transfer_learning_netwok(input_shape=bottleneck_train[0].shape, n_of_classes=n_classes)
             model.summary()
 
-            hist = trainAndPredict.train_network(network=model, bottleneck_network=soa_network,
-                                                 training_data=bottleneck_train, training_target=y_train,
-                                                 validation_data=bottleneck_valid, validation_target=y_valid,
-                                                 overwrite=0, prefix='tl',
-                                                 data_augmentation=data_augmentation,
-                                                 epochs=epochs,
-                                                 )
+            # hist = trainAndPredict.train_network(network=model, bottleneck_network=soa_network,
+            #                                      training_data=bottleneck_train, training_target=y_train,
+            #                                      validation_data=bottleneck_valid, validation_target=y_valid,
+            #                                      overwrite=0, prefix='tl',
+            #                                      data_augmentation=data_augmentation,
+            #                                      epochs=epochs,
+            #                                      )
+            trainAndPredict.train_network(network=model, bottleneck_network=soa_network,
+                                          training_data=bottleneck_train, training_target=y_train,
+                                          validation_data=bottleneck_valid, validation_target=y_valid,
+                                          overwrite=0, prefix='tl', data_augmentation=data_augmentation, epochs=epochs,
+                                          )
 
             pred_test_probl = model.predict(bottleneck_test)
             pred_test = np.array([np.argmax(x) for x in pred_test_probl])

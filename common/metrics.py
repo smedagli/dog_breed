@@ -46,17 +46,17 @@ def get_f1_score(pred, y):
 
 
 def get_recall(pred, y):
-    """    Returns recall defined as: tp / (fn + tp) (true positive / condition positive)    """
-    tp = _get_number_of_true_positive(pred, y)
-    fn = _get_number_of_false_negative(pred, y)
-    return tp / (tp + fn)
+    """    Returns recall defined as: TP / (FN + TP) (TP / condition positive)    """
+    true_positive = _get_number_of_true_positive(pred, y)
+    false_negative = _get_number_of_false_negative(pred, y)
+    return true_positive / (true_positive + false_negative)
 
 
 def get_precision(pred, y):
-    """    Returns precision defined as: tp / (tp + fp)    """
-    tp = _get_number_of_true_positive(pred, y)
-    fp = _get_number_of_false_positive(pred, y)
-    return tp / (tp + fp)
+    """    Returns precision defined as: TP / (TP + FP)    """
+    true_positive = _get_number_of_true_positive(pred, y)
+    false_positive = _get_number_of_false_positive(pred, y)
+    return true_positive / (true_positive + false_positive)
 
 
 # True/False - Positive/Negative (All of these can be also done with sklearn.metrics.confusion_matrix)
