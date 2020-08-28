@@ -1,3 +1,6 @@
+"""
+Will print whether or not there is a dog in the input image file
+"""
 import argparse
 from dog_breed.detectors import detectors
 

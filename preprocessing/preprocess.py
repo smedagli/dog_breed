@@ -1,26 +1,10 @@
 import numpy as np
-
-from dog_breed.common.tools import progr
+import tqdm
 
 from keras.preprocessing import image
 
 
 img_size = 224  # images loaded must be resized to this dimension (squared)
-
-
-def path_to_tensor(img_path):
-    # loads RGB image as PIL.Image.Image type
-    img = image.load_img(img_path, target_size=(img_size, img_size))
-    # convert PIL.Image.Image type to 3D tensor with shape (224, 224, 3)
-    x = image.img_to_array(img)
-    # convert 3D tensor to 4D tensor with shape (1, 224, 224, 3) and return 4D tensor
-    return np.expand_dims(x, axis=0)
-
-
-def paths_to_tensor(img_paths):
-    list_of_tensors = list(map(path_to_tensor, progr(img_paths)))
-    # list_of_tensors = [path_to_tensor(img_path) for img_path in tqdm(img_paths)]
-    return np.vstack(list_of_tensors)
 
 
 def _load_image_size(image_path: str, h=img_size, w=img_size):
@@ -52,5 +36,31 @@ def load_image(image_path: str, h=img_size, w=img_size):
         array([0.5372549 , 0.4745098 , 0.27450982], dtype=float32)
     """
     img = _load_image_size(image_path, h, w)
-    x = np.expand_dims(image.img_to_array(img), axis=0)
-    return x.astype('float32') / 255
+    x = image.img_to_array(img)
+    return np.vstack(x, axis=0)
+
+
+def path_to_tensor(img_path: str) -> np.array:
+    """ Returns the tensor (not normalized) representing the image file
+    Args:
+        img_path: path to the image
+    Returns:
+    """
+    # loads RGB image as PIL.Image.Image type
+    img = image.load_img(img_path, target_size=(img_size, img_size))
+    # convert PIL.Image.Image type to 3D tensor with shape (224, 224, 3)
+    x = image.img_to_array(img)
+    # convert 3D tensor to 4D tensor with shape (1, 224, 224, 3) and return 4D tensor
+    return np.expand_dims(x, axis=0)
+
+
+def paths_to_tensor(img_paths: list) -> np.array:
+    """ Returns the tensors (not normalized) representing the image files
+    Args:
+        img_paths: list of paths
+    Returns:
+    See Also:
+        path_to_tensor()
+    """
+    list_of_tensors = [path_to_tensor(img_path) for img_path in tqdm.tqdm(img_paths)]
+    return np.vstack(list_of_tensors)
