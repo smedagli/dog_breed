@@ -61,15 +61,16 @@ def extract_bottleneck_features(network: str, tensor) -> np.ndarray:
     See Also:
         extract_bottleneck_features_list()
     """
-    if network == 'VGG19':
+    lower_net = network.lower()
+    if lower_net == 'vgg19':
         return extract_VGG19(tensor)
-    elif network == 'VGG16':
+    elif lower_net == 'vgg16':
         return extract_VGG16(tensor)
-    elif network == 'Resnet50':
+    elif lower_net == 'resnet50':
         return extract_Resnet50(tensor)
-    elif network == 'InceptionV3':
+    elif lower_net == 'inceptionv3':
         return extract_InceptionV3(tensor)
-    elif network == 'Xception':
+    elif lower_net == 'xception':
         return extract_Xception(tensor)
 
 
@@ -91,19 +92,20 @@ def extract_bottleneck_features_list(network: str, tensor_list: list) -> np.ndar
     See Also:
         extract_bottleneck_features()
     """
-    if network == 'VGG19':
+    lower_net = network.lower()
+    if lower_net == 'vgg19':
         from keras.applications.vgg19 import preprocess_input
         net = VGG19(**args_NN)
-    elif network == 'VGG16':
+    elif lower_net == 'vgg16':
         from keras.applications.vgg16 import preprocess_input
         net = VGG16(**args_NN)
-    elif network == 'Resnet50':
+    elif lower_net == 'resnet50':
         from keras.applications.resnet50 import preprocess_input
         net = ResNet50(**args_NN)
-    elif network == 'InceptionV3':
+    elif lower_net == 'inceptionv3':
         from keras.applications.inception_v3 import preprocess_input
         net = InceptionV3(**args_NN)
-    elif network == 'Xception':
+    elif lower_net == 'xception':
         from keras.applications.xception import preprocess_input
         net = Xception(**args_NN)
     return np.vstack(list(map(lambda x: net.predict(preprocess_input(x)), tools.progr(tensor_list))))
