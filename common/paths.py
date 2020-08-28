@@ -21,17 +21,27 @@ class Folders:
         self.bottleneck_features = os.path.join(self.data, 'bottleneck_features')
 
 
-def get_weights_filename(bottleneck_network: str, prefix='mynet', epochs=5, data_augmentation=False):
+def get_weights_filename(bottleneck_network: str, prefix='mynet', epochs=5, data_augmentation=False,
+                         transfer_learning=True):
     """ Returns the filename where the weights of the network will be saved """
+    if transfer_learning:
+        base_folder = os.path.join(Folders().models, 'TL')
+    else:
+        base_folder = os.path.join(Folders().models, 'CNN')
     if not data_augmentation:
-        return os.path.join(Folders().models, f'{prefix}_{epochs}_weight.best.{bottleneck_network}.hdf5')
+        return os.path.join(base_folder, f'{prefix}_{epochs}_weight.best.{bottleneck_network}.hdf5')
     else:
         return get_weights_filename(bottleneck_network, prefix, epochs).replace('_weight', '_A_weight')
 
 
-def get_hist_filename(bottleneck_network: str, prefix='mynet', epochs=5, data_augmentation=False):
+def get_hist_filename(bottleneck_network: str, prefix='mynet', epochs=5, data_augmentation=False,
+                      transfer_learning=True):
     """ Returns the filename where the history of the network will be saved """
+    if transfer_learning:
+        base_folder = os.path.join(Folders().models, 'TL')
+    else:
+        base_folder = os.path.join(Folders().models, 'CNN')
     if not data_augmentation:
-        return os.path.join(Folders().models, f'{prefix}_{epochs}_hist.{bottleneck_network}.hdf5')
+        return os.path.join(base_folder, f'{prefix}_{epochs}_hist.{bottleneck_network}.hdf5')
     else:
         return get_hist_filename(bottleneck_network, prefix, epochs).replace('_hist', '_A_hist')
