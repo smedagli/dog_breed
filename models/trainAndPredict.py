@@ -84,18 +84,22 @@ def train_network(network, bottleneck_network: str, training_data, training_targ
                                callbacks=[checkpointer],
                                **args_model_training, batch_size=batch_size,
                                )
-            pickle.dump([hist], open(model_hist_file, 'wb'))
         else:
             # model_weight_file = f'saved_models/{prefix}_A_weight.best.{bottleneck_network}.hdf5'
             datagen = ImageDataGenerator(**args_data_augmentation)
             datagen.fit(training_data)
-            hist = network.fit_generator(datagen.flow(training_data, training_target, batch_size=batch_size),
-                                         steps_per_epoch=training_data.shape[0] / batch_size,
-                                         validation_data=(validation_data, validation_target),
-                                         callbacks=[checkpointer],
-                                         **args_model_training,
-                                         )
-            pickle.dump([hist], open(model_hist_file, 'wb'))
+            # hist = network.fit_generator(datagen.flow(training_data, training_target, batch_size=batch_size),
+            #                              steps_per_epoch=training_data.shape[0] / batch_size,
+            #                              validation_data=(validation_data, validation_target),
+            #                              callbacks=[checkpointer],
+            #                              **args_model_training,
+            #                              )
+            hist = network.fit(datagen.flow(training_data, training_target, batch_size=batch_size),
+                               steps_per_epoch=training_data.shape[0] / batch_size,
+                               validation_data=(validation_data, validation_target),
+                               callbacks=[checkpointer],
+                               **args_model_training,
+                               )
         pickle.dump(hist.history, open(model_hist_file, 'wb'))
 
     load_network_weights(network, model_weight_file)
