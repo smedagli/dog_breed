@@ -18,6 +18,7 @@ class Folders:
         self.training_data = os.path.join(self.data, 'dogImages', 'train')
         self.test_data = os.path.join(self.data, 'dogImages', 'test')
         self.validation_data = os.path.join(self.data, 'dogImages', 'valid')
+        self.bottleneck_features = os.path.join(self.data, 'bottleneck_features')
 
 
 def get_weights_filename(bottleneck_network: str, prefix='mynet', epochs=5, data_augmentation=False):
