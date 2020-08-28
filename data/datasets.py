@@ -1,3 +1,6 @@
+"""
+This module contains the functions to handle training, validation and test datasets
+"""
 import os
 import numpy as np
 
