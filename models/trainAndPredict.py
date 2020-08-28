@@ -118,4 +118,4 @@ def predict(network, image_path: str) -> str:
     dog_names = get_dog_names()
     bottleneck_features = extract_bottleneck_features(network, image_path)
     pred = network.predict(bottleneck_features)
-    return dog_names[np.argmax(pred)]
+    return dog_names[int(np.argmax(pred))]
