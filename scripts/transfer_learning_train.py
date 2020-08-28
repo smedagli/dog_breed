@@ -1,5 +1,5 @@
 """
-Uses transfer learning to train a network
+Uses transfer learning to train a network.
 """
 import argparse
 from dog_breed.models import transfer_learning
@@ -10,7 +10,8 @@ if __name__ == '__main__':
                 'prefix': 'tl',
                 }
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description='Uses transfer learning to train a network.')
+
     parser.add_argument('-n', '--pretrained_network',
                         help='Name of the pretrained network (no quote). Can be: \
                         VGG16\

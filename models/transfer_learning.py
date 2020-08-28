@@ -1,8 +1,7 @@
 """
 This module contains the tool to generate model using transfer learning
 
-This module uses Transfer Learning to classify the breed of dogs from the picture.
-Procedure:
+train_transfer_learning_net():
     * loads the dataset (training and validation)
     * bottle neck features are computed from pre-trained networks
         - VGG16
@@ -16,6 +15,11 @@ Procedure:
     * saves the weight in 'data/saved_models/' with the filename:
         if data augmentation is used ->     <prefix>_<epochs>_A_weight.best.<pre_trained_net>.hdf5
         else ->                             <prefix>_<epochs>_weight.best.<pre_trained_net>.hdf5
+
+eval_performance():
+    if the weights' file already exists, creates the basic network and loads the weights.
+    Then computes the performance (by default, the accuracy on the test set).
+    Otherwise calls train_transfer_learning_net() and then evaluates the performance.
 """
 import os
 import pickle

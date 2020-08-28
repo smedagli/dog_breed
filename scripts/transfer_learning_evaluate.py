@@ -1,5 +1,5 @@
 """
-Uses transfer learning to train a network
+Uses transfer learning to evaluate performance of a network.
 """
 import argparse
 from dog_breed.models import transfer_learning
@@ -10,7 +10,8 @@ if __name__ == '__main__':
                 'prefix': 'tl',
                 }
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description='Uses transfer learning to evaluate performance of a network.')
+
     parser.add_argument('-n', '--pretrained_network',
                         help='Name of the pretrained network (no quote). Can be: \
                         VGG16\
@@ -29,7 +30,7 @@ if __name__ == '__main__':
     parser.add_argument('-tr', '--train', default=False, action='store_true',
                         help='Evaluate performance on training set')
     parser.add_argument('-vl', '--valid', default=False, action='store_true',
-                        help = 'Evaluate performance on validation set')
+                        help='Evaluate performance on validation set')
     # parser.add_argument('-ts', '--test', default=False, action='store_true',
     #                     help = 'Evaluate performance on test set')
 
@@ -39,9 +40,9 @@ if __name__ == '__main__':
     train_args.update({'epochs': int(train_args['epochs'])})
     train_args.update({'test': True})
 
-    d = {k : v for k, v in train_args.items() if k in ['train', 'valid', 'test']}
+    d = {k: v for k, v in train_args.items() if k in ['train', 'valid', 'test']}
     [train_args.pop(k) for k in ['train', 'valid', 'test']]
-    dataset_list = [k for k, v in d.items() if v == True]
+    dataset_list = [k for k, v in d.items() if v is True]
 
     print('\n')
     if args.pretrained_network.lower() not in ['vgg16', 'vgg19', 'resnet50', 'inceptionv3', 'xception']:
