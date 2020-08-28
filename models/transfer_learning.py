@@ -83,16 +83,16 @@ def train_transfer_learning_net(pretrained_network: str, epochs: int, data_augme
         n_of_classes = len(datasets.get_dog_names())
         model = bn.build_transfer_learning_netwok(input_shape=bottleneck_train[0].shape, n_of_classes=n_of_classes)
 
-        # _ = trainAndPredict.train_network(network=model,
+        # _ = trainAndPredict.train_network_tl(network=model,
         #                                   training_data=bottleneck_train, training_target=y_train,
         #                                   validation_data=bottleneck_valid, validation_target=y_valid,
         #                                   **args_train,
         #                                   )
-        train_and_predict.train_network(network=model,
-                                        training_data=bottleneck_train, training_target=y_train,
-                                        validation_data=bottleneck_valid, validation_target=y_valid,
-                                        **args_train,
-                                        )
+        train_and_predict.train_network_tl(network=model,
+                                           training_data=bottleneck_train, training_target=y_train,
+                                           validation_data=bottleneck_valid, validation_target=y_valid,
+                                           **args_train,
+                                           )
 
         model_file = paths.get_weights_filename(pretrained_network, prefix, epochs, data_augmentation)
         print(f"Weights saved at\t{model_file}")
