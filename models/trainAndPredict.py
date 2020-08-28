@@ -41,12 +41,10 @@ def load_network_weights(network, weight_file: str):
     network.load_weights(weight_file)
 
 
-def train_network(network, bottleneck_network, training_data, training_target,
+def train_network(network, bottleneck_network: str, training_data, training_target,
                   validation_data, validation_target, overwrite=0, prefix='mynet',
                   data_augmentation=True, epochs=15, batch_size=20):
-
-    """ Trains the given network and saves the best weights
-    Trains the network using the bottleneck features
+    """ Trains the given network and saves the best weights (and history)
     Args:
         network:
         bottleneck_network:
@@ -99,8 +97,10 @@ def train_network(network, bottleneck_network, training_data, training_target,
     return hist
 
 
-def predict(network, image_path: str):
-    """
+def predict(network, image_path: str) -> str:
+    """ Predicts the dog breed as string (and not as categorical).
+    The output of network.predict is a category of dog breed.
+    This function returns the name of the breed given the category.
     Args:
         network:
         image_path:
