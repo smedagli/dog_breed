@@ -1,3 +1,7 @@
+"""
+@ TODO:
+    - save history from train_network()
+"""
 import requests
 import io
 import os
