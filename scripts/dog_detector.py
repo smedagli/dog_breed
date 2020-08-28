@@ -1,6 +1,6 @@
 import argparse
-# from dog_breed.detectors import detectors
-import detectors
+from dog_breed.detectors import detectors
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -8,6 +8,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     dog = detectors.is_dog(args.file)
     if dog:
-        print("The image represents at least a human")
+        print("The image represents a dog")
     else:
-        print("No human detected in the image")
+        print("No dog detected in the image")
