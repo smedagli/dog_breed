@@ -1,65 +1,66 @@
 """
 Evaluates the performance (in terms of test accuracy) of the saved models.
-@ Todo:
-    - convert to executable
-    - use dog_breed.models.transfer_learning methods
+Iterates through the .hdf5 files of a specified folder and assigns the weights to the basic transfer learning network.
+Then computes the test accuracy for each of them and reports it into a .csv file.
 """
 import os
+import argparse
 import pandas as pd
-import numpy as np
-import pickle
 
 from dog_breed.common import paths
-from dog_breed.data import datasets
-from dog_breed.models import build_network as bn
-from dog_breed.models import trainAndPredict
-from dog_breed.models import bottleneck_features as bf
-from dog_breed.preprocessing import preprocess
 from dog_breed.models import transfer_learning as tl
 
-pd.options.display.width = 2500
-pd.options.display.max_columns = 25
 
-n_classes = len(datasets.get_dog_names())
+def evaluate_models_in_folder(models_folder) -> pd.DataFrame:
+    weight_file_list = list(filter(lambda x: paths.is_weight_file(x),
+                                   paths.listdir(models_folder)))  # all weight files
+    base_net = list(
+        map(lambda x: x.rsplit('.', 2)[1], weight_file_list))  # name of the bottleneck network for each model
+    epochs = list(map(lambda x: x.rsplit('_')[3], weight_file_list))  # number of epochs for each model
+    basename = list(map(lambda x: os.path.basename(x).split('_')[0], weight_file_list))  # prefix for each model
+    augmented = list(map(lambda x: '_A_weight' in x, weight_file_list))
 
-models_folder = paths.Folders().models
-weight_file_list = list(filter(lambda x: paths.is_weight_file(x),
-                               paths.listdir(models_folder)))  # all weight files
-base_net = list(map(lambda x: x.rsplit('.', 2)[1], weight_file_list))  # name of the bottleneck network for each model
-epochs = list(map(lambda x: x.rsplit('_')[3], weight_file_list))  # number of epochs for each model
-basename = list(map(lambda x: os.path.basename(x).split('_')[0], weight_file_list))  # prefix for each model
-augmented = list(map(lambda x: '_A_weight' in x, weight_file_list))
+    saved_models_df = pd.DataFrame(data=(base_net, basename, epochs, augmented, weight_file_list),
+                                   index=['bottleneck_features', 'prefix', 'epochs', 'augmented', 'path'],
+                                   ).T
 
-saved_models_df = pd.DataFrame(data=(base_net, basename, epochs, augmented, weight_file_list),
-                               index=['bottleneck_features', 'prefix', 'epochs', 'augmented', 'path'],
-                               ).T
+    if saved_models_df.empty:
+        pass
+    else:
+        for bottle_net, df_by_net in saved_models_df.groupby('bottleneck_features'):
+            pretrained_network = bottle_net
+            for i in df_by_net.index:
+                epochs = df_by_net.loc[i, 'epochs']
+                prefix = df_by_net.loc[i, 'prefix']
+                data_augmentation = df_by_net.loc[i, 'augmented']
+                saved_models_df.loc[i, 'test_accuracy'] = tl.eval_performance(pretrained_network=pretrained_network,
+                                                                              epochs=epochs,
+                                                                              data_augmentation=data_augmentation,
+                                                                              prefix=prefix,
+                                                                              dataset='test',
+                                                                              )
 
-saved_models_df.to_dict()
+    return saved_models_df.sort_values(by='test_accuracy', ascending=False)
 
-test_files, y_test = datasets.load_test()  # load the test set
-tensors_test = preprocess.paths_to_tensor(test_files).astype('float32') / 255
 
-if saved_models_df.empty:
-    pass
-else:
-    for bottle_net, df in saved_models_df.groupby('bottleneck_features'):
-        print(bottle_net)
-        bottle_file = f'data/bottleneck_features/bottleneck_{bottle_net.lower()}.pkl'
+if __name__ == '__main__':
+    defaults = {'models_folder': paths.Folders().models,
+                'report_folder': paths.Folders().data,
+                }
 
-        if os.path.exists(bottle_file):
-            _, _, bottleneck_test = pickle.load(open(bottle_file, 'rb'))
-        else:
-            print("Computing bottleneck features")
-            bottleneck_test = bf.extract_bottleneck_features_list(bottle_net, tensors_test)
+    parser = argparse.ArgumentParser(
+        description='Evaluates the performance (in terms of test accuracy) of the saved models.')
 
-        input_shape = bottleneck_test[0].shape
+    parser.add_argument('-m', '--models_folder', default=defaults['models_folder'],
+                        help=f"Folder containing the weights' (.hdf5) files (default: {defaults['models_folder']})",
+                        )
+    parser.add_argument('-o', '--output', default=defaults['report_folder'],
+                        help=f"Folder where the report (.csv) will be saved (default: {defaults['report_folder']})",
+                        )
+    args = parser.parse_args()
+    arguments = vars(args)
 
-        for i in df.index:  # iter the different saved weights
-            weight_file = df.loc[i, 'path']
-            net = bn.build_transfer_learning_netwok(input_shape=input_shape, n_of_classes=n_classes)
-            trainAndPredict.load_network_weights(net, weight_file)
-            pred = net.predict(bottleneck_test)
-            acc = (np.array([np.argmax(x) for x in pred]) == np.array([np.argmax(y) for y in y_test])).sum() / len(y_test)
-            saved_models_df.loc[i, 'test_accuracy[%]'] = acc * 100
-
-    print(saved_models_df.sort_values(by='test_accuracy[%]', ascending=False))
+    df = evaluate_models_in_folder(arguments['models_folder'])
+    output_file = os.path.join(arguments['output'], 'report.csv')
+    print(f"\nWriting report at\t{output_file}")
+    df.to_csv(output_file, index=False)
