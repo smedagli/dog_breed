@@ -40,11 +40,9 @@ def build_network_from_scratch(input_shape: tuple, n_of_classes: int) -> Sequent
     net.add(MaxPool2D(**args_maxpool))
     net.add(Conv2D(**args_conv2d, filters=2 * base_conv_filter_number))
     net.add(MaxPool2D(**args_maxpool))
-    # net.add(Conv2D(**args_conv2d, filters=4 * base_conv_filter_number))
-    # net.add(MaxPool2D(**args_maxpool))
     net.add(GlobalAveragePooling2D())
-    net.add(Dense(256))
+    net.add(Dense(256, activation='relu'))
     net.add(Dropout(.2))
-    net.add(Dense(n_of_classes))
+    net.add(Dense(n_of_classes, activation='softmax'))
     net.compile(metrics=['accuracy'], loss='categorical_crossentropy', optimizer='rmsprop')
     return net
