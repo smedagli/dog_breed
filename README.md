@@ -63,14 +63,20 @@ create a conda environment using the file in `environment/pkg.txt`
 ```bash
 conda create --name breed --file dog_breed/environment/pkg.txt
 ```
-To run correcly the dog classifier it is necessary to add this folder to the environmental paths. 
+To run correcly the dog classifier it is necessary to add the module folder to the environmental paths.
+. 
 #### @TODO:
     - write dog_breed.models.train_and_predict headline and explanation in the Readme
     - refactor code
-    - refactor functions to accept with less arguments
+    - refactor functions that have too many arguments)
     - resolve internal "import" instructions in bottleneck_features.py
-    
+    - mkdir when saving files in non existing folders
+    - version that does not save in memory temporary files
 ## folder structure
+the code was written considering the following folder structure.
+<br>
+Different architecture may produce error and need to adapt the paths
+
 ```bash
 |   .gitignore
 |   __init__.py
@@ -172,6 +178,8 @@ implements the human and dog detector for images
 contains functions to compute the bottleneck features for pre-trained networks
 * *build_network.py*:
 contains the function(s) to create the networks to implement transfer learning and a CNN from the sketch.
+* *dog_classifier.py*:
+contains functions for final dog classification tasks
 #### cnn
 contains tools and functions to handle the case of CNN from the sketch
 * *train_and_predict_cnn.py*:
@@ -186,8 +194,6 @@ contains tools and functions to handle the case of Transfer learning (need refac
 contains methods to use transfer learning to train multiple models
 * *transfer_learning.py*:
 contains the tool to generate and evaluate models using transfer learning
-
-
 #### preprocessing
 * *preprocess.py*:
 contains tools for preprocessing of the images
