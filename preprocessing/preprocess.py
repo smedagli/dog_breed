@@ -14,7 +14,7 @@ IMG_SIZE = 224  # images loaded must be resized to this dimension (squared)
 def _load_image_size(image_path: str, height=IMG_SIZE, width=IMG_SIZE):
     """ Loads an image imposing the input resolution w x h
     @ TODO:
-        check the order of h and w
+        check the order of height and width
     Args:
         image_path: path to the image
         height: height of the image to load

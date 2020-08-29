@@ -29,16 +29,9 @@ def _get_labels_from_folder(folder) -> pd.Series:
     return _get_labels_from_data(data)
 
 
-def get_train_labels(folder=FOLDERS.training_data) -> pd.Series:
-    return _get_labels_from_folder(folder)
-
-
-def get_test_labels(folder=FOLDERS.test_data) -> pd.Series:
-    return _get_labels_from_folder(folder)
-
-
-def get_valid_labels(folder=FOLDERS.validation_data) -> pd.Series:
-    return _get_labels_from_folder(folder)
+def get_train_labels(folder=FOLDERS.training_data) -> pd.Series: return _get_labels_from_folder(folder)
+def get_test_labels(folder=FOLDERS.test_data) -> pd.Series: return _get_labels_from_folder(folder)
+def get_valid_labels(folder=FOLDERS.validation_data) -> pd.Series: return _get_labels_from_folder(folder)
 
 
 if __name__ == '__main__':

@@ -12,6 +12,7 @@ module_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)
 
 
 class Folders:
+    """    This class contains the default folders for the project    """
     def __init__(self):
         self.data = os.path.join(module_path, 'data')
         self.models = os.path.join(self.data, 'saved_models')
