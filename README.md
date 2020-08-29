@@ -21,15 +21,14 @@ Models are in general of 2 kinds:
 
 ### CNN from the sketch
 The default CNN network is a sequential network with the following layers:
-1) Conv2D
-2) MaxPool2D
-3) Conv2D
-4) MaxPool2D
-5) Conv2D
-6) MaxPool2D
-7) GlobalAveragePooling2D
-8) Dropout
-9) Dense with 133 nodes (since there are 133 possible dog breeds) - Output
+
+    1) Conv2D
+    2) MaxPool2D
+    3) Conv2D
+    4) MaxPool2D
+    5) GlobalAveragePooling2D
+    6) Dropout
+    7) Dense with 133 nodes (since there are 133 possible dog breeds) - Output
 
 To edit this architecture see *dog_breed.models.build_network.py*.
 <br>
@@ -52,8 +51,9 @@ The possible pre-trained network are:
 
 Once computed the bottleneck features,
 they will feed a network constituted by 2 layers:
-1) GlobalAveragePooling2D
-2) Dense with 133 nodes (since there are 133 possible dog breeds) - Output
+
+    1) GlobalAveragePooling2D
+    2) Dense with 133 nodes (since there are 133 possible dog breeds) - Output
 
 To edit this architecture see *dog_breed.models.build_network.py*.
 
@@ -63,9 +63,12 @@ create a conda environment using the file in `environment/pkg.txt`
 ```bash
 conda create --name breed --file dog_breed/environment/pkg.txt
 ```
+To run correcly the dog classifier it is necessary to add this folder to the environmental paths. 
 #### @TODO:
-    - train CNN from the sketch
     - write dog_breed.models.train_and_predict headline and explanation in the Readme
+    - refactor code
+    - refactor functions to accept with less arguments
+    - resolve internal "import" instructions in bottleneck_features.py
     
 ## folder structure
 ```bash
@@ -108,9 +111,18 @@ conda create --name breed --file dog_breed/environment/pkg.txt
 |   |   __init__.py
 |   |   bottleneck_features.py
 |   |   build_network.py
-|   |   train_and_predict.py
-|   |   train_multiple.py
-|   |   transfer_learning.py 
+|   |
+|   +---cnn
+|   |    |   __init__.py
+|   |    |   train_and_predict_cnn.py
+|   |    |   train_multiple_cnn.py
+|   |
+|   +---tl
+|   |    |   __init__.py
+|   |    |   train_and_predict_tl.py
+|   |    |   train_multiple_tl.py
+|   |    |   transfer_learning.py   
+|   |     
 |       
 +---notebooks
 |   |   data_analysis.ipynb
@@ -138,6 +150,8 @@ conda create --name breed --file dog_breed/environment/pkg.txt
 contains the common arguments for graphical objects
 * *metrics.py*:
 contains the different metrics to evaluate the quality of predictions
+* *models_param.py*:
+contains common functions and parameters for model training
 * *paths.py*:
 the module defines the default paths and functions to navigate the project
 * *tools.py*:
@@ -158,17 +172,33 @@ implements the human and dog detector for images
 contains functions to compute the bottleneck features for pre-trained networks
 * *build_network.py*:
 contains the function(s) to create the networks to implement transfer learning and a CNN from the sketch.
-* *train_and_predict.py*:
-* *train_multiple.py*:
+#### cnn
+contains tools and functions to handle the case of CNN from the sketch
+* *train_and_predict_cnn.py*:
+
+* *train_multiple_cnn.py*:
+contains methods to train multiple CNNs from sketch
+#### tl
+contains tools and functions to handle the case of Transfer learning (need refactoring of the code)
+* *train_and_predict_tl.py*:
+
+* *train_multiple_tl.py*:
 contains methods to use transfer learning to train multiple models
-* *transfer_learning.py*: 
+* *transfer_learning.py*:
 contains the tool to generate and evaluate models using transfer learning
+
 
 #### preprocessing
 * *preprocess.py*:
 contains tools for preprocessing of the images
 
 ## Scripts
+#### dog_classifier.py
+Will print the dog breed
+(or the breed to which the human in the picture resembles the most.)
+```bash
+python scripts/dog_detector.py -f <path_to_image>
+```
 #### dog_detector.py
 Will print whether or not there is a dog in the input image file.
 ###### example
