@@ -14,10 +14,19 @@ from keras.applications.xception import Xception
 from keras.applications.inception_v3 import InceptionV3
 
 from dog_breed.common import tools
+from dog_breed.preprocessing import preprocess
 
 args_NN = {'weights': 'imagenet',
            'include_top': False,
            }
+
+NETS = ['vgg16', 'vgg19', 'resnet50', 'inceptionv3', 'xception']  # pre-trained networks available
+BOTTLENECK_SHAPES = {'vgg16': (7, 7, 512),
+                     'vgg19': (7, 7, 512),
+                     'resnet50': (7, 7, 2048),
+                     'inceptionv3': (5, 5, 2048),
+                     'xception': (7, 7, 2048),
+                     }  # shape of the generic bottleneck feature for each pre-trained network
 
 
 def extract_VGG16(tensor) -> np.ndarray:
@@ -109,3 +118,9 @@ def extract_bottleneck_features_list(network: str, tensor_list: list) -> np.ndar
         from keras.applications.xception import preprocess_input
         net = Xception(**args_NN)
     return np.vstack(list(map(lambda x: net.predict(preprocess_input(x)), tools.progr(tensor_list))))
+
+
+def path_to_bottleneck(img_path: str, pre_trained_network):
+    """ Returns the bottleneck features directly from the image path """
+    tensor = preprocess.path_to_tensor(img_path)
+    return extract_bottleneck_features(pre_trained_network, tensor)
