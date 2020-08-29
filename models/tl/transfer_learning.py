@@ -24,7 +24,6 @@ eval_performance():
 import os
 import pickle
 
-import common.models_param
 import numpy as np
 from PIL import ImageFile
 
@@ -68,8 +67,8 @@ def train_transfer_learning_net(pretrained_network: str, epochs: int, data_augme
                       'bottleneck_network': pretrained_network,
                       }
         # load train/validation file names and labels
-        train_files, y_train = datasets.load_training()
-        valid_files, y_valid = datasets.load_validation()
+        train_files, y_train = datasets.load_dataset(dataset='train')
+        valid_files, y_valid = datasets.load_dataset(dataset='valid')
         # compute tensors
         tensors_train = list(map(preprocess.path_to_tensor, ct.progr(train_files)))
         tensors_valid = list(map(preprocess.path_to_tensor, ct.progr(valid_files)))
@@ -119,13 +118,7 @@ def eval_performance(pretrained_network: str, epochs: int, data_augmentation: bo
     model_file = paths.get_weights_filename(pretrained_network, prefix, epochs, data_augmentation)
     if os.path.exists(model_file) and not overwrite:
         print(f"Model already trained.\nWeights' file at\t{model_file}")
-        if dataset == 'test':
-            files, labels = datasets.load_test()
-        elif dataset == 'train':
-            files, labels = datasets.load_training()
-        else:
-            files, labels = datasets.load_validation()
-
+        files, labels = datasets.load_dataset(dataset=dataset)
         tensors = list(map(preprocess.path_to_tensor, ct.progr(files)))
 
         bottle_file = os.path.join(paths.Folders().bottleneck_features, f'bottleneck_{pretrained_network.lower()}.pkl')

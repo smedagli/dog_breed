@@ -28,14 +28,14 @@ from dog_breed.common import metrics
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 NETS = ['vgg16', 'vgg19', 'resnet50', 'inceptionv3', 'xception']
-EPOCHS = [5, 10, 20, 100]
+EPOCHS = [5, 10, 20]
 DATA_AUGMENTATION = [False, True]
 
 if __name__ == '__main__':
     # get all file names and labels
-    train_files, y_train = datasets.load_training()
-    valid_files, y_valid = datasets.load_validation()
-    test_files, y_test = datasets.load_test()
+    train_files, y_train = datasets.load_dataset(dataset='train')
+    valid_files, y_valid = datasets.load_dataset(dataset='valid')
+    test_files, y_test = datasets.load_dataset(dataset='test')
     n_classes = len(datasets.get_dog_names())
     # compute the tensors
     tensors_train = list(map(lambda x: preprocess.path_to_tensor(x).astype('float32') / 255, ct.progr(train_files)))

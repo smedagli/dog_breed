@@ -8,11 +8,13 @@ from sklearn.datasets import load_files
 from keras.utils import np_utils
 
 from dog_breed.common import paths
+from dog_breed.preprocessing import preprocess
+
 
 folders = paths.Folders()
 
 
-def load_dataset(path: str):
+def load_data(path: str):
     """ Loads file names and their labels (as categorical)
     Args:
         path:
@@ -27,11 +29,31 @@ def load_dataset(path: str):
     return dog_files, dog_targets
 
 
-def load_training(training_folder=folders.training_data): return load_dataset(training_folder)
-def load_test(test_folder=folders.test_data): return load_dataset(test_folder)
-def load_validation(valid_folder=folders.validation_data): return load_dataset(valid_folder)
+def _load_training(training_folder=folders.training_data): return load_data(training_folder)
+def _load_test(test_folder=folders.test_data): return load_data(test_folder)
+def _load_validation(valid_folder=folders.validation_data): return load_data(valid_folder)
+
+
+def load_dataset(dataset='train'):
+    """ Loads the specified dataset
+    Args:
+        dataset: select among ['test', 'train', 'valid']
+    Returns:
+        files: list of filenames of dog images
+        labels: categorical (one hot encoded) labels for each file in the dog_files lis
+    """
+    if dataset == 'test':
+        return _load_test()
+    elif dataset == 'train':
+        return _load_training()
+    else:
+        return _load_validation()
 
 
 def get_dog_names(training_folder=folders.training_data) -> list:
     """ Return the list of dog breeds (from training) """
     return list(map(lambda x: x.split('.')[-1], os.listdir(training_folder)))
+
+
+def get_number_of_classes(training_folder=folders.training_data) -> int:
+    return len(get_dog_names(training_folder))
