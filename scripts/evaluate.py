@@ -8,7 +8,8 @@ import argparse
 import pandas as pd
 
 from dog_breed.common import paths
-from dog_breed.models import transfer_learning as tl
+from models.tl import transfer_learning as tl
+from dog_breed.models.cnn.train_and_predict_cnn import eval_cnn
 
 
 def evaluate_models_in_folder(models_folder) -> pd.DataFrame:

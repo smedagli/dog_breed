@@ -7,7 +7,7 @@ from dog_breed.preprocessing import preprocess
 from dog_breed.data import datasets
 from dog_breed.models import build_network as bn
 from dog_breed.common import tools as ct
-from dog_breed.models import train_and_predict
+from dog_breed.models.cnn import train_and_predict_cnn
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 

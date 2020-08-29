@@ -2,8 +2,7 @@
 Uses transfer learning to evaluate performance of a network.
 """
 import argparse
-from dog_breed.models import transfer_learning
-
+from models.tl import transfer_learning
 
 if __name__ == '__main__':
     defaults = {'epochs': 5,
