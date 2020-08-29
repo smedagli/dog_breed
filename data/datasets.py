@@ -3,12 +3,12 @@ This module contains the functions to handle training, validation and test datas
 """
 import os
 import numpy as np
+import pandas as pd
 
 from sklearn.datasets import load_files
 from keras.utils import np_utils
 
 from dog_breed.common import paths
-from dog_breed.preprocessing import preprocess
 
 
 folders = paths.Folders()
@@ -52,7 +52,10 @@ def load_dataset(dataset='train'):
 
 def get_dog_names(training_folder=folders.training_data) -> list:
     """ Return the list of dog breeds (from training) """
-    return list(map(lambda x: x.split('.')[-1], os.listdir(training_folder)))
+    if os.path.exists(training_folder):
+        return list(map(lambda x: x.split('.')[-1], os.listdir(training_folder)))
+    else:
+        return pd.read_csv('data/dog_names.csv', header=None)[0].tolist()
 
 
 def get_number_of_classes(training_folder=folders.training_data) -> int:
