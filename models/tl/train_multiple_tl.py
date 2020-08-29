@@ -20,7 +20,7 @@ from PIL import ImageFile
 from dog_breed.models import build_network as bn
 from dog_breed.data import datasets
 from dog_breed.preprocessing import preprocess
-from dog_breed.models import train_and_predict
+from dog_breed.models.tl import train_and_predict_tl
 from dog_breed.models import bottleneck_features as bf
 from dog_breed.common import tools as ct
 from dog_breed.common import metrics
@@ -28,7 +28,7 @@ from dog_breed.common import metrics
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 NETS = ['vgg16', 'vgg19', 'resnet50', 'inceptionv3', 'xception']
-EPOCHS = [5, 10, 20]
+EPOCHS = [5, 10, 20, 100]
 DATA_AUGMENTATION = [False, True]
 
 if __name__ == '__main__':
@@ -67,12 +67,12 @@ if __name__ == '__main__':
             #                                      data_augmentation=data_augmentation,
             #                                      epochs=epochs,
             #                                      )
-            train_and_predict.train_network_tl(network=model, bottleneck_network=soa_network,
-                                               training_data=bottleneck_train, training_target=y_train,
-                                               validation_data=bottleneck_valid, validation_target=y_valid,
-                                               overwrite=0, prefix='tl', data_augmentation=data_augmentation,
-                                               epochs=epochs,
-                                               )
+            train_and_predict_tl.train_network_tl(network=model, bottleneck_network=soa_network,
+                                                  training_data=bottleneck_train, training_target=y_train,
+                                                  validation_data=bottleneck_valid, validation_target=y_valid,
+                                                  overwrite=0, prefix='tl', data_augmentation=data_augmentation,
+                                                  epochs=epochs,
+                                                  )
 
             pred_test_probl = model.predict(bottleneck_test)
             pred_test = np.array([np.argmax(x) for x in pred_test_probl])
