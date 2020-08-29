@@ -53,6 +53,8 @@ def train_network_tl(network, bottleneck_network: str, training_data, training_t
         epochs: number of epochs to train the model
         batch_size: batch size to train the model
     Returns:
+    @ TODO:
+        - fix data augmentation: augmentation must be done before computing the bottleneck features?
     """
 
     args_model_training = {'epochs': epochs,

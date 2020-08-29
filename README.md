@@ -66,6 +66,7 @@ conda create --name breed --file dog_breed/environment/pkg.txt
 To run correcly the dog classifier it is necessary to add the module folder to the environmental paths.
 . 
 #### @TODO:
+    - data augmentation for transfer learning?
     - write dog_breed.models.train_and_predict headline and explanation in the Readme
     - refactor code
     - refactor functions that have too many arguments)
