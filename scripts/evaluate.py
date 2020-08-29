@@ -12,7 +12,7 @@ from models.tl import transfer_learning as tl
 from dog_breed.models.cnn.train_and_predict_cnn import eval_cnn
 
 
-def evaluate_models_in_folder(models_folder) -> pd.DataFrame:
+def evaluate_models_in_folder_tl(models_folder) -> pd.DataFrame:
     weight_file_list = list(filter(lambda x: paths.is_weight_file(x),
                                    paths.listdir(models_folder)))  # all weight files
 
@@ -43,7 +43,31 @@ def evaluate_models_in_folder(models_folder) -> pd.DataFrame:
                                                                               prefix=prefix,
                                                                               dataset='test',
                                                                               )
+    return saved_models_df.sort_values(by='test_accuracy', ascending=False)
 
+
+def evaluate_models_in_folder_cnn(models_folder) -> pd.DataFrame:
+    weight_file_list = list(filter(lambda x: paths.is_weight_file(x),
+                                   paths.listdir(models_folder)))  # all weight files
+
+    epochs = list(map(lambda x: os.path.basename(x).rsplit('_')[1],
+                      weight_file_list))  # number of epochs for each model
+    augmented = list(map(lambda x: '_A_weight' in x, weight_file_list))
+
+    saved_models_df = pd.DataFrame(data=(epochs, augmented, weight_file_list),
+                                   index=['epochs', 'augmented', 'path'],
+                                   ).T
+
+    if saved_models_df.empty:
+        return pd.DataFrame()
+    else:
+        for i in saved_models_df.index:
+            epochs = int(saved_models_df.loc[i, 'epochs'])
+            data_augmentation = saved_models_df.loc[i, 'augmented']
+            saved_models_df.loc[i, 'test_accuracy'] = eval_cnn(epochs=epochs,
+                                                               data_augmentation=data_augmentation,
+                                                               dataset='test',
+                                                               )
     return saved_models_df.sort_values(by='test_accuracy', ascending=False)
 
 
@@ -64,7 +88,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     arguments = vars(args)
 
-    df = evaluate_models_in_folder(arguments['models_folder'])
+    if 'CNN' in arguments['models_folder']:
+        df = evaluate_models_in_folder_cnn(arguments['models_folder'])
+    else:
+        df = evaluate_models_in_folder_tl(arguments['models_folder'])
 
     folder = os.path.basename(os.path.abspath(arguments['models_folder']))
     output_file = os.path.join(arguments['output'], f'{folder}_report.csv')
