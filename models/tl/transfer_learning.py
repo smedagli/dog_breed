@@ -89,10 +89,9 @@ def train_transfer_learning_net(pretrained_network: str, epochs: int, data_augme
         #                                   validation_data=bottleneck_valid, validation_target=y_valid,
         #                                   **args_train,
         #                                   )
-        train_and_predict_tl.train_network_tl(network=model,
-                                              training_data=bottleneck_train, training_target=y_train,
-                                              validation_data=bottleneck_valid, validation_target=y_valid,
-                                              **args_train,
+        train_and_predict_tl.train_network_tl(network=model, **args_train,
+                                              training_set=(bottleneck_train, y_train),
+                                              validation_set=(bottleneck_valid, y_valid),
                                               )
 
         model_file = paths.get_weights_filename(pretrained_network, prefix, epochs, data_augmentation)
@@ -123,13 +122,7 @@ def eval_performance(pretrained_network: str, epochs: int, data_augmentation: bo
 
         bottle_file = os.path.join(paths.Folders().bottleneck_features, f'bottleneck_{pretrained_network.lower()}.pkl')
         if os.path.exists(bottle_file):
-            bottleneck_train, bottleneck_valid, bottleneck_test = pickle.load(open(bottle_file, 'rb'))
-            if dataset == 'test':
-                bottleneck_features = bottleneck_test
-            elif dataset == 'train':
-                bottleneck_features = bottleneck_train
-            else:
-                bottleneck_features = bottleneck_valid
+            bottleneck_features = bf.load_bottleneck(dataset=dataset, bottle_file=bottle_file)
         else:
             bottleneck_features = bf.extract_bottleneck_features_list(pretrained_network, tensors)
 

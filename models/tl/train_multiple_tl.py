@@ -68,8 +68,8 @@ if __name__ == '__main__':
             #                                      epochs=epochs,
             #                                      )
             train_and_predict_tl.train_network_tl(network=model, bottleneck_network=soa_network,
-                                                  training_data=bottleneck_train, training_target=y_train,
-                                                  validation_data=bottleneck_valid, validation_target=y_valid,
+                                                  training_set=(bottleneck_train, y_train),
+                                                  validation_set=(bottleneck_valid, y_valid),
                                                   overwrite=0, prefix='tl', data_augmentation=data_augmentation,
                                                   epochs=epochs,
                                                   )

@@ -36,17 +36,14 @@ def load_bottleneck_features(network: str) -> dict:
     return data
 
 
-def train_network_tl(network, bottleneck_network: str, training_data, training_target,
-                     validation_data, validation_target, overwrite=0, prefix='mynet',
-                     data_augmentation=True, epochs=15, batch_size=20):
+def train_network_tl(network, bottleneck_network: str, training_set: tuple, validation_set: tuple,
+                     overwrite=0, prefix='mynet', data_augmentation=True, epochs=15, batch_size=20):
     """ Trains the given network and saves the best weights (and history) - Transfer Learning
     Args:
         network:
         bottleneck_network:
-        training_data:
-        training_target:
-        validation_data:
-        validation_target:
+        training_set: (training_data, training_target)
+        validation_set: (validation_data, validation_target)
         overwrite: if 1, overwrites the saved weights
         prefix: prefix of the filename to save weights
         data_augmentation: if 1 uses data augmentation for training data
@@ -56,6 +53,8 @@ def train_network_tl(network, bottleneck_network: str, training_data, training_t
     @ TODO:
         - fix data augmentation: augmentation must be done before computing the bottleneck features?
     """
+    training_data, training_target = training_set
+    validation_data, validation_target = validation_set
 
     args_model_training = {'epochs': epochs,
                            'verbose': 1,
