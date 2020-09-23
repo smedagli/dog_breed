@@ -63,14 +63,13 @@ create a conda environment using the file in `environment/pkg.txt`
 ```bash
 conda create --name breed --file dog_breed/environment/pkg.txt
 ```
-To run correcly the dog classifier it is necessary to add the module folder to the environmental paths.
+To run correctly the dog classifier it is necessary to add the module folder to the environmental paths.
 . 
 #### @TODO:
     - data augmentation for transfer learning?
     - write dog_breed.models.train_and_predict headline and explanation in the Readme
     - refactor code
     - refactor functions that have too many arguments)
-    - resolve internal "import" instructions in bottleneck_features.py
     - mkdir when saving files in non existing folders
     - version that does not save in memory temporary files
 ## folder structure
@@ -204,7 +203,7 @@ contains tools for preprocessing of the images
 Will print the dog breed
 (or the breed to which the human in the picture resembles the most.)
 ```bash
-python scripts/dog_detector.py -f <path_to_image>
+python scripts/dog_classifier.py -f <path_to_image>
 ```
 #### dog_detector.py
 Will print whether or not there is a dog in the input image file.
